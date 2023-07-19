@@ -37,17 +37,55 @@ public class SocialMediaController {
         String str;
         JSONString jstr;
         Context c;
-        c = context.json("sample text");
+        c = context.json(context.body());
         str = c.result();
 
         System.out.println(str);
+        if(str.length() == 0){
+            System.out.println("AJD DEBUGGING CODE: Str has no value");
+        }
+     
+        int q1 = 3;
+        int q2 = 4;
+        findQuotes(str, q1, q2);
+        String Username = str.substring(q1 +1, q2);
+        q1 = 7;
+        q2 = 8;
+        String Password = str.substring(q1 +1, q2);
+
         /*
          * Parse String: Get Username
-         * Check to see if username exists.
+         * Check to see if username has characters.
          * Check to see if it exists within database;
+         *          Probably going to have to edit DAO
          * Check to see if password is four characters long
         */
         
+    }
+
+    /*
+     * @Param str: string to be searched
+     * @Param q1: the xth quotation mark
+     * @Param q2: the yth quotation mark;
+     * 
+     * @edit: q1 and q2 will have the position of the x and yth place in the string.
+    */
+    private void findQuotes(String str, int q1, int q2){
+        
+        for(int i = 0, q = 0; i <str.length(); i++){
+            if(str.charAt(i) == '"'){
+                q++;
+            }
+            if( q == q1){
+                q1 = i;
+            }
+            if( q == q2){
+                q2 = i;
+                return;
+            }
+
+        }
+        System.out.println("AJD FATAL ERROR: Q1 and/or Q2 not found");
     }
 
 
