@@ -1,5 +1,7 @@
 package Controller;
 
+import org.h2.util.json.JSONString;
+
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 
@@ -16,8 +18,9 @@ public class SocialMediaController {
      */
     public Javalin startAPI() {
         Javalin app = Javalin.create();
+        //app.start?
         app.get("example-endpoint", this::exampleHandler);
-
+        app.post("/register", this::registerHandler);
         return app;
     }
 
@@ -27,6 +30,24 @@ public class SocialMediaController {
      */
     private void exampleHandler(Context context) {
         context.json("sample text");
+        
+    }
+
+    private void registerHandler(Context context) {
+        String str;
+        JSONString jstr;
+        Context c;
+        c = context.json("sample text");
+        str = c.result();
+
+        System.out.println(str);
+        /*
+         * Parse String: Get Username
+         * Check to see if username exists.
+         * Check to see if it exists within database;
+         * Check to see if password is four characters long
+        */
+        
     }
 
 
