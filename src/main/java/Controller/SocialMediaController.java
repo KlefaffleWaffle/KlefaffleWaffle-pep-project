@@ -1,5 +1,7 @@
 package Controller;
 
+import java.sql.SQLException;
+
 import org.h2.util.json.JSONString;
 
 import DAO.AccountDAO;
@@ -44,7 +46,7 @@ public class SocialMediaController {
         
     }
 
-    private void registerHandler(Context context) {
+    private void registerHandler(Context context) throws SQLException{
         System.out.println("Register Handler is working");
         String str;
         JSONString jstr;

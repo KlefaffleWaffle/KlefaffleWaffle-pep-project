@@ -11,12 +11,12 @@ import java.sql.*;
 public class AccountDAO {
     //DAOs are classes used to get information to and from the SQL database.
    
-    public boolean existsWithinDatabase(String strParameter){
+    public boolean existsWithinDatabase(String strParameter) throws SQLException{
         Connection connection = ConnectionUtil.getConnection();
        
 
         //======WAS TOLD NOT TO USE TRY/CATCH in DAO.
-        try {
+        //try {
             String sql = "Select * FROM account Where Username = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, strParameter);
@@ -24,8 +24,8 @@ public class AccountDAO {
             System.out.println("AccDAO return value = " + (rs.absolute(1)));
             System.out.println("(Meaning it does/does not exist in database)");
             return (rs.absolute(1));
-        } 
-        
+        //} 
+        /*
         catch (SQLException e) {
             System.out.println("Exception has been caught in \"existsWithinDatabase\"");
             System.out.println("=================");
@@ -34,7 +34,7 @@ public class AccountDAO {
             System.out.println("AJD ERROR:  SQL exception in DAO");
             return false;
         }
-        
+        */
 
     }
 
