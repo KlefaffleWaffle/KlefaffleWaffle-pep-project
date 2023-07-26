@@ -29,22 +29,29 @@ public class AccountDAO {
 
     }
 
+    public boolean addToDatabase(Account a){
+        //parse string
+        //addToDatabase(u, p);
+        return true;
+    }
 
-    public void addToDatabase(){
+    //=========================================Definitely gonna need something here parameters;
+    public boolean addToDatabase(String userN, String passW){
         Connection connection = ConnectionUtil.getConnection();
        
         try {
-            String sql = "Select * FROM account Where Username = ?";
+            String sql = "INSERT INTO account (username, password) VALUES (?,?)";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
-            preparedStatement.setString(      );
+            preparedStatement.setString(1, userN);
+            preparedStatement.setString(2, passW);
             
             ResultSet rs = preparedStatement.executeQuery();
-            return;
+            return true;
         } catch (SQLException e) {
             // TODO: handle exception
             System.out.println("AJD ERROR:  SQL exception in DAO");
-            return;
+            return false;
         }
         
 

@@ -20,8 +20,11 @@ public class SocialMediaController {
     public Javalin startAPI() {
         Javalin app = Javalin.create();
         //app.start?
+        //I believe Get retrieves, Post sends code.
         app.get("example-endpoint", this::exampleHandler);
-        app.post("/register", this::registerHandler);
+        app.get("/register", ctx ->{this.registerHandler(ctx);});
+        //app.post("/register", this::registerHandler);
+       // app.post("/register", ctx->{ if(this::registerHandler) {ctx.status(200);}else{ctx.status();}});
         return app;
     }
 
@@ -89,7 +92,15 @@ public class SocialMediaController {
 
         if(ad.existsWithinDatabase(Username) == false){
             if(Username.length() > 0 && Password.length() > 4){
-                //add to database;
+                if(ad.addToDatabase(Username, Password) == true){
+                    /*If done successfully: return status code 200
+                     * else check test
+                    */
+                    //in code this is done through lambda
+                    //=========//registerHandler.status(200);
+                    context.status(200);
+
+                }
             }
 
         }
