@@ -19,12 +19,19 @@ public class SocialMediaController {
      */
     public Javalin startAPI() {
         Javalin app = Javalin.create();
+        System.out.println ("Seeing debug line in startApi");
+        
         //app.start?
         //I believe Get retrieves, Post sends code.
-        app.get("example-endpoint", this::exampleHandler);
-        app.get("/register", ctx ->{this.registerHandler(ctx);});
+        //app.get("example-endpoint", this::exampleHandler);
+        
+        
+        //app.get("/register", ctx ->{System.out.println("Start API is working");this.registerHandler(ctx);});
+        app.post("/register", ctx ->{System.out.println("Start API is working");this.registerHandler(ctx);});
+        
+        
         //app.post("/register", this::registerHandler);
-       // app.post("/register", ctx->{ if(this::registerHandler) {ctx.status(200);}else{ctx.status();}});
+        // app.post("/register", ctx->{ if(this::registerHandler) {ctx.status(200);}else{ctx.status();}});
         return app;
     }
 
@@ -38,6 +45,7 @@ public class SocialMediaController {
     }
 
     private void registerHandler(Context context) {
+        System.out.println("Register Handler is working");
         String str;
         JSONString jstr;
         Context c;
@@ -90,8 +98,11 @@ public class SocialMediaController {
         String Password = str.substring(q1 +1, q2);
         AccountDAO ad = new AccountDAO();
 
+        System.out.println("parameters are:\nUsername =" + Username + "\nPassword = " + Password);
+
         if(ad.existsWithinDatabase(Username) == false){
             if(Username.length() > 0 && Password.length() > 4){
+                
                 if(ad.addToDatabase(Username, Password) == true){
                     /*If done successfully: return status code 200
                      * else check test
@@ -101,9 +112,13 @@ public class SocialMediaController {
                     context.status(200);
 
                 }
+            }else{
+                
+                context.status(399);
             }
-
+            
         }
+
         /* 
         System.out.println("AJD DEBUGGING: Username and Passwords");
         System.out.println(Password);
