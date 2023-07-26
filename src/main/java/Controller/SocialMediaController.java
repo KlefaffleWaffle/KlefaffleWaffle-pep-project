@@ -96,13 +96,15 @@ public class SocialMediaController {
 
         }
         String Password = str.substring(q1 +1, q2);
+        //======================================== REplace with Service Class
         AccountDAO ad = new AccountDAO();
+        //========================================
 
         System.out.println("parameters are:\nUsername =" + Username + "\nPassword = " + Password);
 
         if(ad.existsWithinDatabase(Username) == false){
             if(Username.length() > 0 && Password.length() > 4){
-                
+
                 if(ad.addToDatabase(Username, Password) == true){
                     /*If done successfully: return status code 200
                      * else check test
@@ -114,34 +116,16 @@ public class SocialMediaController {
                 }
             }else{
                 
-                context.status(399);
+                context.status(400);
             }
             
         }
 
-        /* 
-        System.out.println("AJD DEBUGGING: Username and Passwords");
-        System.out.println(Password);
-        System.out.println(Username);
-        */
-        
-        /*
-         * Parse String: Get Username
-         * Check to see if username has characters.
-         * Check to see if it exists within database;
-         *          Probably going to have to edit DAO
-         * Check to see if password is four characters long
-        */
+   
         
     }
 
-    /*
-     * @Param str: string to be searched
-     * @Param q1: the xth quotation mark
-     * @Param q2: the yth quotation mark;
-     * 
-     * @edit: q1 and q2 will have the position of the x and yth place in the string.
-    */
+
 
 
 }

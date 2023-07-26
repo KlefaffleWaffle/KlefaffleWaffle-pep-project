@@ -14,14 +14,19 @@ public class AccountDAO {
     public boolean existsWithinDatabase(String strParameter){
         Connection connection = ConnectionUtil.getConnection();
        
+
+        //======WAS TOLD NOT TO USE TRY/CATCH in DAO.
         try {
             String sql = "Select * FROM account Where Username = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, strParameter);
             ResultSet rs = preparedStatement.executeQuery();
             System.out.println("AccDAO return value = " + (rs.absolute(1)));
+            System.out.println("(Meaning it does/does not exist in database)");
             return (rs.absolute(1));
-        } catch (SQLException e) {
+        } 
+        
+        catch (SQLException e) {
             System.out.println("Exception has been caught in \"existsWithinDatabase\"");
             System.out.println("=================");
             e.getMessage();
@@ -52,6 +57,25 @@ public class AccountDAO {
             
             //ResultSet rs = preparedStatement.executeQuery();
             preparedStatement.executeUpdate();
+
+
+            //DEBUGGING
+            /* 
+            String sql2 = "SELECT * FROM account";
+            preparedStatement = connection.prepareStatement(sql);
+            ResultSet rs = preparedStatement.executeQuery();
+
+            while(rs.next()){
+                for(int i = 1 ; i <= 3; i++){
+
+                    System.out.print(rs.getString(i) + " "); //Print one element of a row
+              
+                }
+              
+                System.out.println();//Move to the next line to print the next row. 
+
+            }
+            */
             return true;
         } catch (SQLException e) {
             // TODO: handle exception
