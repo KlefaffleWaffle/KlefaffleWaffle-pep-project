@@ -1,7 +1,7 @@
 package DAO;
 
 import Model.Account;
-import Model.Message;
+
 
 import Util.ConnectionUtil;
 
@@ -33,8 +33,8 @@ public class AccountDAO {
         String sql = "INSERT INTO account (username, password) VALUES (?,?)";
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
-        preparedStatement.setString(1, p);
-        preparedStatement.setString(2, u);
+        preparedStatement.setString(1, u);
+        preparedStatement.setString(2, p);
             
             //ResultSet rs = preparedStatement.executeQuery();
         
@@ -95,18 +95,33 @@ public class AccountDAO {
         Connection connection = ConnectionUtil.getConnection();
        
 
-        //======WAS TOLD NOT TO USE TRY/CATCH in DAO.
-        //try {
+       
             System.out.println("Starting duplicate check");
-            String sql = "SELECT * FROM account WHERE username = ?";
+            //String sql = "SELECT * FROM account WHERE username = ?";
+            String sql = "SELECT * FROM account";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setString(1, strParameter);
-            ResultSet rs = preparedStatement.executeQuery();
-            if((rs.getString(2) != null)){
-            System.out.println("AccDAO return value = " + (rs.getString(2)));
+            
+            Statement s = connection.createStatement();
+            //preparedStatement.setString(1, strParameter);
+            ResultSet rs = s.executeQuery(sql);
+            System.out.println("Before big test");
+            while(rs.next() == true){
+            String temp = rs.getString("username");
+            System.out.println("In While Loop. temp = "+temp);
+            System.out.println("Comparing against: "+strParameter);
+                if(temp.equals(strParameter)){
+                    return true;
+                }
             }
-            System.out.println("(Meaning it does/does not exist in database)");
-            return (rs.absolute(1));
+            System.out.println("After big test");
+            return false;
+            /* 
+            if((rs.getString(2) != null)){
+                System.out.println("AccDAO return value = " + (rs.getString(2)));
+                }
+                */
+            //System.out.println("(Meaning it does/does not exist in database)");
+            //return (rs.absolute(1));
             
             /* 
             if(rs.absolute(1) == true){
@@ -117,7 +132,7 @@ public class AccountDAO {
                 System.out.println("Returned other in test");
             }
             */  
-        //} 
+        
       
 
     }
@@ -125,6 +140,27 @@ public class AccountDAO {
 
 
     public Account testLogin(Account a) throws SQLException{
-        
+        String p = a.getPassword();
+        String u = a.getUsername();
+        Connection connection = ConnectionUtil.getConnection();
+
+        String sql = "SELECT * FROM account WHERE username = ? AND password = ?";
+        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        preparedStatement.setString(1, u);
+        preparedStatement.setString(2, p);
+
+        ResultSet rs = preparedStatement.executeQuery();
+
+
+        if(rs.next()){
+        int id= -1;
+        String temp = rs.getString(1);
+        id = Integer.parseInt(temp);
+        System.out.print(rs.getString(1) + " "); //Print one element of a row        
+
+        return new Account(id, u, p);
+        }else{
+        return null;
+        }
     }
 }

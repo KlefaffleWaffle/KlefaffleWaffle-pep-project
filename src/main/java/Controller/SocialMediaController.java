@@ -10,7 +10,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import DAO.AccountDAO;
 import Model.Account;
+import Model.Message;
 import Service.AccountServiceClass;
+import Service.MessageServiceClass;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 
@@ -35,6 +37,9 @@ public class SocialMediaController {
         //app.get("/register", ctx ->{System.out.println("Start API is working");this.registerHandler(ctx);});
         app.post("/register", ctx ->{System.out.println("Start API is working");this.registerHandler(ctx);});
         app.post("/login",ctx->{System.out.println("Start Login");this.loginHandler(ctx);});
+        app.post("/messages", ctx->{System.out.println("Start Message"); this.messageHandler(ctx);});
+        app.get("/messages", ctx->{System.out.println("Start Message Retrieval"); this.messageRetrievalHandler(ctx);});
+        
         
         //app.post("/register", this::registerHandler);
         // app.post("/register", ctx->{ if(this::registerHandler) {ctx.status(200);}else{ctx.status();}});
@@ -61,8 +66,9 @@ public class SocialMediaController {
         Account accountTest = as.addAccount(account2);
         System.out.println("Controller 2");
         //account2.setAccount_id(accountTest.getAccount_id());
-        
-
+        if(accountTest == null){
+        System.out.println("Controller: Account is ");
+        }
         
         if(accountTest != null){
             context.status(200);
@@ -70,7 +76,7 @@ public class SocialMediaController {
             context.json(accountTest);
         }else{
             context.status(400);
-
+            //context.json(null);
         }
         
 
@@ -85,7 +91,7 @@ public class SocialMediaController {
         System.out.println("Mapper value translated " + account2.username + " " + account2.password);
         AccountServiceClass as = new AccountServiceClass();
         
-        Account accountTest = as.addAccount(account2);
+        Account accountTest = as.runLogin(account2);
         
         if(accountTest != null){
             context.status(200);
@@ -93,10 +99,37 @@ public class SocialMediaController {
             context.json(accountTest);
         }else{
             context.status(401);
-
+        
         }
         
         
         //context.json(account);
+    }
+
+    public void messageHandler(Context context) throws JsonProcessingException, SQLException{
+        ObjectMapper mapper = new ObjectMapper();
+        Message message1 = mapper.readValue(context.body(), Message.class);
+        System.out.println("Mapper value translated " + message1.posted_by + " " + message1.message_text + " " + message1.time_posted_epoch);
+       
+        MessageServiceClass MSC = new MessageServiceClass();
+        
+        Message messageTest = MSC.createMessage(message1);
+
+        if(messageTest != null){
+            context.status(200);
+            //context.json(account2);
+            context.json(messageTest);
+        }else{
+            context.status(400);
+        
+        }
+       
+       
+        //context.status(200);
+        //context.json(message)
+    }
+
+    public void messageRetrievalHandler(Context context){
+        context.status(200);
     }
 }
