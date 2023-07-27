@@ -7,6 +7,8 @@ import Util.ConnectionUtil;
 
 import java.sql.*;
 
+import org.h2.jdbc.JdbcSQLNonTransientException;
+
 
 public class AccountDAO {
     //DAOs are classes used to get information to and from the SQL database.
@@ -38,7 +40,7 @@ public class AccountDAO {
 
     }
 
-    public Account addToDatabase(Account a) throws SQLException{
+    public Account addToDatabase(Account a) throws SQLException, org.h2.jdbc.JdbcSQLNonTransientException{
         String p = a.getPassword();
         String u = a.getUsername();
         Connection connection = ConnectionUtil.getConnection();
@@ -55,16 +57,21 @@ public class AccountDAO {
             preparedStatement.executeUpdate();
             //formerly execute update
             
-            String sql2 = "SELECT * FROM account";
+            String sql2 = "SELECT MAX(account_id) FROM account";
             preparedStatement = connection.prepareStatement(sql2);
+            
             ResultSet rs = preparedStatement.executeQuery();
-
+            int id = -1;
+            //System.out.println("int id has been collected. Value is: " + id);
+            //System.out.println("id is = " + id);
+    
             while(rs.next()){
-                for(int i = 1 ; i <= 3; i++){
-
-                    System.out.print(rs.getString(i) + " "); //Print one element of a row
+                int i = 1;
+                    String temp = rs.getString(i);
+                    id = Integer.parseInt(temp);
+                    System.out.print(rs.getString(i) + i + " "); //Print one element of a row
               
-                }
+                i++;
               
                 System.out.println();//Move to the next line to print the next row. 
 
@@ -77,7 +84,7 @@ public class AccountDAO {
             System.out.println(pkeyResultSet);
             pkeyResultSet.first();
 
-            return new Account(2, a.username, a.password);
+            return new Account(id, a.username, a.password);
             /* 
             if(pkeyResultSet.next()){            
 
