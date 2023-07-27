@@ -42,23 +42,55 @@ public class AccountDAO {
         String p = a.getPassword();
         String u = a.getUsername();
         Connection connection = ConnectionUtil.getConnection();
+       
 
         String sql = "INSERT INTO account (username, password) VALUES (?,?)";
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
-            preparedStatement.setString(1, p);
-            preparedStatement.setString(2, u);
+        preparedStatement.setString(1, p);
+        preparedStatement.setString(2, u);
             
             //ResultSet rs = preparedStatement.executeQuery();
-            
+        
             preparedStatement.executeUpdate();
-            ResultSet pkeyResultSet = preparedStatement.getGeneratedKeys();
-            //preparedStatement.execute();
-            if(pkeyResultSet.next()){
-                int generated_Account_id = (int) pkeyResultSet.getLong(1);
-                return new Account(generated_Account_id, a.getUsername(), a.getPassword());
-            }
+            //formerly execute update
+            
+            String sql2 = "SELECT * FROM account";
+            preparedStatement = connection.prepareStatement(sql2);
+            ResultSet rs = preparedStatement.executeQuery();
 
+            while(rs.next()){
+                for(int i = 1 ; i <= 3; i++){
+
+                    System.out.print(rs.getString(i) + " "); //Print one element of a row
+              
+                }
+              
+                System.out.println();//Move to the next line to print the next row. 
+
+            }
+    
+            ResultSet pkeyResultSet = preparedStatement.getGeneratedKeys();
+            System.out.println("Line 60: " +pkeyResultSet.first());
+            //preparedStatement.execute();
+        
+            System.out.println(pkeyResultSet);
+            pkeyResultSet.first();
+
+            return new Account(2, a.username, a.password);
+            /* 
+            if(pkeyResultSet.next()){            
+
+                int generated_Account_id = (int) pkeyResultSet.getLong(1);
+                System.out.println("generated_account_id = " + (int) pkeyResultSet.getLong(1));
+                return new Account(generated_Account_id, a.getUsername(), a.getPassword());
+            } else{
+                System.out.println ("There are no more xs in pkeyResultSet");
+                
+            }
+           
+            return null;
+             */
             //DEBUGGING
             /*
             String sql2 = "SELECT * FROM account";
@@ -76,7 +108,7 @@ public class AccountDAO {
 
             }
             */
-            return null;
+           
         //return addToDatabase(u, p);
     }
 

@@ -60,14 +60,18 @@ public class SocialMediaController {
         System.out.println("Controller 1");
         Account accountTest = as.addAccount(account2);
         System.out.println("Controller 2");
+        //account2.setAccount_id(accountTest.getAccount_id());
+        
 
-
-        if(accountTest == null){
+        
+        if(accountTest != null){
             context.status(200);
-           
+            //context.json(account2);
+            context.json(accountTest);
         }else{
-            context.status(400);
+
         }
+        
 
         //context
         
