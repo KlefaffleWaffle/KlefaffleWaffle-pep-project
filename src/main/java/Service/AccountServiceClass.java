@@ -24,6 +24,12 @@ public class AccountServiceClass {
     
     }
 
+    public Account runLogin(Account a) throws SQLException{
+        return accountDAOObject.testLogin(a);
+    }
+
+     
+
 
 }
 

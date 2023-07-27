@@ -13,23 +13,7 @@ import org.h2.jdbc.JdbcSQLNonTransientException;
 public class AccountDAO {
     //DAOs are classes used to get information to and from the SQL database.
    
-    private boolean existsWithinDatabase(String strParameter) throws SQLException{
-        Connection connection = ConnectionUtil.getConnection();
-       
-
-        //======WAS TOLD NOT TO USE TRY/CATCH in DAO.
-        //try {
-            String sql = "SELECT * FROM account WHERE Username = ?";
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setString(1, strParameter);
-            ResultSet rs = preparedStatement.executeQuery();
-            System.out.println("AccDAO return value = " + (rs.absolute(1)));
-            System.out.println("(Meaning it does/does not exist in database)");
-            return (rs.absolute(1));
-        //} 
-      
-
-    }
+    
 
     public Account addToDatabase(Account a) throws SQLException, org.h2.jdbc.JdbcSQLNonTransientException{
         String p = a.getPassword();
@@ -105,5 +89,42 @@ public class AccountDAO {
         }else{
             return true;
         }
+    }
+
+    private boolean existsWithinDatabase(String strParameter) throws SQLException {
+        Connection connection = ConnectionUtil.getConnection();
+       
+
+        //======WAS TOLD NOT TO USE TRY/CATCH in DAO.
+        //try {
+            System.out.println("Starting duplicate check");
+            String sql = "SELECT * FROM account WHERE username = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, strParameter);
+            ResultSet rs = preparedStatement.executeQuery();
+            if((rs.getString(2) != null)){
+            System.out.println("AccDAO return value = " + (rs.getString(2)));
+            }
+            System.out.println("(Meaning it does/does not exist in database)");
+            return (rs.absolute(1));
+            
+            /* 
+            if(rs.absolute(1) == true){
+                System.out.println("Returned true in test");
+            }else if(rs.absolute(1) == false){
+                System.out.println("Returned false in test");
+            }else{
+                System.out.println("Returned other in test");
+            }
+            */  
+        //} 
+      
+
+    }
+
+
+
+    public Account testLogin(Account a) throws SQLException{
+        
     }
 }

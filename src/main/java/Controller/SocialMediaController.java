@@ -34,7 +34,7 @@ public class SocialMediaController {
         
         //app.get("/register", ctx ->{System.out.println("Start API is working");this.registerHandler(ctx);});
         app.post("/register", ctx ->{System.out.println("Start API is working");this.registerHandler(ctx);});
-        
+        app.post("/login",ctx->{System.out.println("Start Login");this.loginHandler(ctx);});
         
         //app.post("/register", this::registerHandler);
         // app.post("/register", ctx->{ if(this::registerHandler) {ctx.status(200);}else{ctx.status();}});
@@ -74,14 +74,29 @@ public class SocialMediaController {
         }
         
 
-        //context
-        
+        //contex
 
-   
-        
     }
 
+    public void loginHandler(Context context) throws SQLException, JsonProcessingException{
+        //returnISH Jason of account like in register
+        ObjectMapper mapper = new ObjectMapper();
+        Account account2 = mapper.readValue(context.body(), Account.class);
+        System.out.println("Mapper value translated " + account2.username + " " + account2.password);
+        AccountServiceClass as = new AccountServiceClass();
+        
+        Account accountTest = as.addAccount(account2);
+        
+        if(accountTest != null){
+            context.status(200);
+            //context.json(account2);
+            context.json(accountTest);
+        }else{
+            context.status(401);
 
-
-
+        }
+        
+        
+        //context.json(account);
+    }
 }
