@@ -13,13 +13,13 @@ import org.h2.jdbc.JdbcSQLNonTransientException;
 public class AccountDAO {
     //DAOs are classes used to get information to and from the SQL database.
    
-    public boolean existsWithinDatabase(String strParameter) throws SQLException{
+    private boolean existsWithinDatabase(String strParameter) throws SQLException{
         Connection connection = ConnectionUtil.getConnection();
        
 
         //======WAS TOLD NOT TO USE TRY/CATCH in DAO.
         //try {
-            String sql = "Select * FROM account Where Username = ?";
+            String sql = "SELECT * FROM account WHERE Username = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, strParameter);
             ResultSet rs = preparedStatement.executeQuery();
@@ -27,16 +27,7 @@ public class AccountDAO {
             System.out.println("(Meaning it does/does not exist in database)");
             return (rs.absolute(1));
         //} 
-        /*
-        catch (SQLException e) {
-            System.out.println("Exception has been caught in \"existsWithinDatabase\"");
-            System.out.println("=================");
-            e.getMessage();
-            System.out.println("=================");
-            System.out.println("AJD ERROR:  SQL exception in DAO");
-            return false;
-        }
-        */
+      
 
     }
 
@@ -45,6 +36,15 @@ public class AccountDAO {
         String u = a.getUsername();
         Connection connection = ConnectionUtil.getConnection();
        
+        /*
+         * Check for Existence here.
+         * 
+         * if  username is Blank || existsInDatabase = true || password is tooshort  
+        */
+        if(usernameIsBlank(u) == true|| existsWithinDatabase(u) == true || passwordIsTooShort(p) == true){
+            return null;
+        }
+
 
         String sql = "INSERT INTO account (username, password) VALUES (?,?)";
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
@@ -85,85 +85,25 @@ public class AccountDAO {
             pkeyResultSet.first();
 
             return new Account(id, a.username, a.password);
-            /* 
-            if(pkeyResultSet.next()){            
-
-                int generated_Account_id = (int) pkeyResultSet.getLong(1);
-                System.out.println("generated_account_id = " + (int) pkeyResultSet.getLong(1));
-                return new Account(generated_Account_id, a.getUsername(), a.getPassword());
-            } else{
-                System.out.println ("There are no more xs in pkeyResultSet");
-                
-            }
            
-            return null;
-             */
-            //DEBUGGING
-            /*
-            String sql2 = "SELECT * FROM account";
-            preparedStatement = connection.prepareStatement(sql2);
-            ResultSet rs = preparedStatement.executeQuery();
-
-            while(rs.next()){
-                for(int i = 1 ; i <= 3; i++){
-
-                    System.out.print(rs.getString(i) + " "); //Print one element of a row
-              
-                }
-              
-                System.out.println();//Move to the next line to print the next row. 
-
-            }
-            */
            
         //return addToDatabase(u, p);
     }
 
     //=========================================Definitely gonna need something here parameters;
-    public Account addToDatabase(String userN, String passW) throws SQLException{
-        Connection connection = ConnectionUtil.getConnection();
-       
-        //try {
-            String sql = "INSERT INTO account (username, password) VALUES (?,?)";
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-
-            preparedStatement.setString(1, userN);
-            preparedStatement.setString(2, passW);
-            
-            //ResultSet rs = preparedStatement.executeQuery();
-            
-            preparedStatement.executeUpdate();
-            //preparedStatement.execute();
-
-
-            //DEBUGGING
-            
-            String sql2 = "SELECT * FROM account";
-            preparedStatement = connection.prepareStatement(sql2);
-            ResultSet rs = preparedStatement.executeQuery();
-
-            while(rs.next()){
-                for(int i = 1 ; i <= 3; i++){
-
-                    System.out.print(rs.getString(i) + " "); //Print one element of a row
-              
-                }
-              
-                System.out.println();//Move to the next line to print the next row. 
-
-            }
-            Account a = new Account(-1,"Lala", "Password");
-            return a;
-        
-        /*
-        } catch (SQLException e) {
-            // TODO: handle exception
-            System.out.println("AJD ERROR:  SQL exception in DAO: \"addToDatabase\"");
-            System.out.println(e.getMessage());
+    private boolean usernameIsBlank(String usernameParameter){
+        if(usernameParameter == ""){
+            return true;
+        }else{
             return false;
         }
-        */
+    }
 
-
+    private boolean passwordIsTooShort(String PasswordParameter){
+        if(PasswordParameter.length() >= 4){
+            return false;
+        }else{
+            return true;
+        }
     }
 }
