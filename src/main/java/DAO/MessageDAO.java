@@ -9,6 +9,9 @@ import Util.ConnectionUtil;
 import java.sql.*;
 import java.util.ArrayList;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import io.javalin.http.Context;
 
 public class MessageDAO {
@@ -213,14 +216,17 @@ public class MessageDAO {
 
     }
 
-    public ArrayList<Message> getAllMessagesUserDAO(){
+    public ArrayList<Message> getAllMessagesUserDAO(Context c)throws SQLException, JsonProcessingException{
         Connection connection = ConnectionUtil.getConnection();
         String sql = "SELECT * FROM message WHERE account_id = ?";
         //Statement s = connection.createStatement();
+        ObjectMapper mapper = new ObjectMapper();
+        Message message1 = mapper.readValue(c.body(), Message.class);
+
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
-        preparedStatement.setString(1, message2.getMessage_text());
+        preparedStatement.setString(1, message1.getMessage_text());
         
-        ResultSet rs = s.executeQuery(sql); System.out.println("Before big test");
+        ResultSet rs = preparedStatement.executeQuery(sql); System.out.println("Before big test");
         ArrayList<Message> messages = new ArrayList<Message>();
         while(rs.next() == true){
             
@@ -228,6 +234,7 @@ public class MessageDAO {
                 messages.add(m);
             
         }
+        System.out.println("Finished DAO");
         return messages;
     }
 

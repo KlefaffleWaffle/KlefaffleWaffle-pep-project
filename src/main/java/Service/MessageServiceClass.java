@@ -4,6 +4,8 @@ import Model.Message;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+
 import DAO.MessageDAO;
 import io.javalin.http.Context;
 
@@ -35,8 +37,8 @@ public class MessageServiceClass {
         return messageDAOObject.PatchTextDAO(IDParamPatch, context);
     }
 
-    public ArrayList<Message> getAllMessagesUser()throws SQLException{
-        return messageDAOObject.getAllMessagesUserDAO();
+    public ArrayList<Message> getAllMessagesUser(Context c)throws SQLException, JsonProcessingException{
+        return messageDAOObject.getAllMessagesUserDAO(c);
         //message1 = MSC.patchText(Integer.parseInt(context.pathParam("message_id")), context);
     }
 }

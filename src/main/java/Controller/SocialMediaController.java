@@ -183,7 +183,8 @@ public class SocialMediaController {
 
     }
 
-    public void retrieveUserHandler(Context context)throws SQLException{
+    public void retrieveUserHandler(Context context)throws SQLException, JsonProcessingException{
+        
         MessageServiceClass MSC = new MessageServiceClass();
         ArrayList<Message> list1 = new ArrayList<>();
         list1 = MSC.getAllMessagesUser(context);
