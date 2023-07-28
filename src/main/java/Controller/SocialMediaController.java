@@ -41,7 +41,9 @@ public class SocialMediaController {
         app.post("/messages", ctx->{System.out.println("Start Message"); this.messageHandler(ctx);});
         app.get("/messages", ctx->{System.out.println("Start Message Retrieval"); this.messageRetrievalHandler(ctx);});
         app.get("/messages/{message_id}", ctx->{System.out.println("Start Message Retrieval by ID"); this.messageRetrievalSpecificHandler(ctx);});
-        
+        app.delete("/messages/{message_id}", ctx-> {this.messageDeleteSpecificHandler(ctx);});
+
+
         //app.post("/register", this::registerHandler);
         // app.post("/register", ctx->{ if(this::registerHandler) {ctx.status(200);}else{ctx.status();}});
         return app;
@@ -141,11 +143,28 @@ public class SocialMediaController {
 
 
     public void messageRetrievalSpecificHandler(Context context)throws SQLException, JsonProcessingException{
+        context.status(200);
         MessageServiceClass MSC = new MessageServiceClass();
         //ObjectMapper mapper = new ObjectMapper();
         //Message message1 = mapper.readValue(context.body(), Message.class);
         Message message1;
         message1 = MSC.getSpecificMessage(Integer.parseInt(context.pathParam("message_id")));
-        context.json(message1.getMessage_text());
+        if(message1 != null){
+        context.json(message1);
+        }else{
+            
+        }
+    }
+
+    public void messageDeleteSpecificHandler(Context context)throws SQLException, JsonProcessingException{
+        context.status(200);
+        MessageServiceClass MSC = new MessageServiceClass();
+        Message message1;
+        message1 = MSC.deleteSpecificMessage(Integer.parseInt(context.pathParam("message_id")));
+        if(message1 != null){
+           context.json(message1);
+        }else{
+                
+        }
     }
 }

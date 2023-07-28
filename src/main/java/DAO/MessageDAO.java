@@ -145,4 +145,14 @@ public class MessageDAO {
         }
         return messageR;
     }
+
+    public Message deleteSpecificMessageDAO(int IDParam)throws SQLException{
+        Message message2 = getSpecificMessage(IDParam);
+        String sql = "DELETE FROM message WHERE message_id = ?";
+        Connection connection = ConnectionUtil.getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        preparedStatement.setInt(1, IDParam);
+        preparedStatement.executeUpdate();
+        return message2;
+    }
 }

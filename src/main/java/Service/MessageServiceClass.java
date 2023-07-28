@@ -24,4 +24,8 @@ public class MessageServiceClass {
     public Message getSpecificMessage(int intParam)throws SQLException{
         return messageDAOObject.getSpecificMessage(intParam);
     }
+
+    public Message deleteSpecificMessage(int intParam)throws SQLException{
+        return messageDAOObject.deleteSpecificMessageDAO(intParam);
+    }
 }
