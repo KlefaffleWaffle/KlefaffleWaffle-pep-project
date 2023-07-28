@@ -7,6 +7,7 @@ import Model.Message;
 import Util.ConnectionUtil;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 
 public class MessageDAO {
@@ -114,5 +115,34 @@ public class MessageDAO {
         return true;
     }
 
+    public ArrayList<Message> getAllMessagesDAO() throws SQLException{
+        Connection connection = ConnectionUtil.getConnection();
+        String sql = "SELECT * FROM message";
+        Statement s = connection.createStatement();
+        ResultSet rs = s.executeQuery(sql); System.out.println("Before big test");
+        ArrayList<Message> messages = new ArrayList<Message>();
+        while(rs.next() == true){
+            
+                Message m = new Message(rs.getInt(1),rs.getInt(2),rs.getString(3),rs.getLong(4));
+                messages.add(m);
+            
+        }
+        return messages;
+    }
 
+    public Message getSpecificMessage(int intParam2)throws SQLException{
+        Connection connection = ConnectionUtil.getConnection();
+        String sql = "SELECT * FROM message";
+        Statement s = connection.createStatement();
+        ResultSet rs = s.executeQuery(sql); System.out.println("Before big test");
+       Message messageR = null;
+        while(rs.next() == true){
+            
+                if(rs.getInt(1) == intParam2){
+                    messageR = new Message(rs.getInt(1), rs.getInt(2),rs.getString(3),rs.getLong(4));
+                }
+            
+        }
+        return messageR;
+    }
 }

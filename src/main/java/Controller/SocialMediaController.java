@@ -1,6 +1,7 @@
 package Controller;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import org.h2.util.json.JSONString;
 
@@ -39,7 +40,7 @@ public class SocialMediaController {
         app.post("/login",ctx->{System.out.println("Start Login");this.loginHandler(ctx);});
         app.post("/messages", ctx->{System.out.println("Start Message"); this.messageHandler(ctx);});
         app.get("/messages", ctx->{System.out.println("Start Message Retrieval"); this.messageRetrievalHandler(ctx);});
-        
+        app.get("/messages/{message_id}", ctx->{System.out.println("Start Message Retrieval by ID"); this.messageRetrievalSpecificHandler(ctx);});
         
         //app.post("/register", this::registerHandler);
         // app.post("/register", ctx->{ if(this::registerHandler) {ctx.status(200);}else{ctx.status();}});
@@ -129,7 +130,22 @@ public class SocialMediaController {
         //context.json(message)
     }
 
-    public void messageRetrievalHandler(Context context){
-        context.status(200);
+    public void messageRetrievalHandler(Context context)throws SQLException{
+
+        MessageServiceClass MSC = new MessageServiceClass();
+
+        ArrayList<Message> list1 = new ArrayList<>();
+        list1 = MSC.getAllMessages();
+        context.json(list1);
+    }
+
+
+    public void messageRetrievalSpecificHandler(Context context)throws SQLException, JsonProcessingException{
+        MessageServiceClass MSC = new MessageServiceClass();
+        //ObjectMapper mapper = new ObjectMapper();
+        //Message message1 = mapper.readValue(context.body(), Message.class);
+        Message message1;
+        message1 = MSC.getSpecificMessage(Integer.parseInt(context.pathParam("message_id")));
+        context.json(message1.getMessage_text());
     }
 }
