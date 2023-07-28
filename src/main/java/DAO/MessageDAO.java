@@ -9,6 +9,7 @@ import Util.ConnectionUtil;
 import java.sql.*;
 import java.util.ArrayList;
 
+import io.javalin.http.Context;
 
 public class MessageDAO {
 
@@ -155,4 +156,80 @@ public class MessageDAO {
         preparedStatement.executeUpdate();
         return message2;
     }
+
+    public Message PatchTextDAO(int IDParamPatch, Context context)throws SQLException{
+        Message testMessage = getSpecificMessage(IDParamPatch);
+        if( testMessage == null){
+           return null;
+        }
+
+        int q3 = -1;
+        int q4 = -1;
+        String bodyText = context.body();
+        for(int i = 0, j = 0; i < context.body().length(); i++){
+            if(bodyText.charAt(i) == '"'){
+                j++;
+                if(j == 3){
+                    q3 = i;
+                }else if(j == 4){
+                    q4 = i;
+                }
+            }
+        }
+        String messageStr = "";
+        messageStr = bodyText.substring(q3+1, q4);
+        Message message2 = getSpecificMessage(IDParamPatch);
+        message2.setMessage_text(messageStr);
+
+        System.out.println("message is: " + message2.getMessage_text());
+        // int userID = m.getPosted_by();
+        if(failsBlankMessage(message2.getMessage_text()) == true || failsLengthTest(message2.getMessage_text())==true){
+            return null;
+        }
+        
+        
+
+        //message2.setMessage_text(context.body());
+
+
+
+        //context.
+        System.out.println("Context Body is: " + context.body());
+
+        
+        
+        System.out.println("line 179");
+        String sql = "UPDATE message SET message_text = ? WHERE message_id = ?";
+        Connection connection = ConnectionUtil.getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        System.out.println("line 185");
+       
+        preparedStatement.setString(1, message2.getMessage_text());
+        preparedStatement.setInt(2, IDParamPatch);
+        System.out.println("line 185");
+        preparedStatement.executeUpdate();
+        System.out.println("DAO successful");
+        return message2;
+
+    }
+
+    public ArrayList<Message> getAllMessagesUserDAO(){
+        Connection connection = ConnectionUtil.getConnection();
+        String sql = "SELECT * FROM message WHERE account_id = ?";
+        //Statement s = connection.createStatement();
+        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        preparedStatement.setString(1, message2.getMessage_text());
+        
+        ResultSet rs = s.executeQuery(sql); System.out.println("Before big test");
+        ArrayList<Message> messages = new ArrayList<Message>();
+        while(rs.next() == true){
+            
+                Message m = new Message(rs.getInt(1),rs.getInt(2),rs.getString(3),rs.getLong(4));
+                messages.add(m);
+            
+        }
+        return messages;
+    }
+
+
 }

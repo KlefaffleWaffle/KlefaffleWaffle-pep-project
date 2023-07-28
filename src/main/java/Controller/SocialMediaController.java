@@ -42,7 +42,8 @@ public class SocialMediaController {
         app.get("/messages", ctx->{System.out.println("Start Message Retrieval"); this.messageRetrievalHandler(ctx);});
         app.get("/messages/{message_id}", ctx->{System.out.println("Start Message Retrieval by ID"); this.messageRetrievalSpecificHandler(ctx);});
         app.delete("/messages/{message_id}", ctx-> {this.messageDeleteSpecificHandler(ctx);});
-
+        app.patch("/messages/{message_id}", ctx->{this.messagePatchHandler(ctx);});
+        app.get("/accounts/{account_id}/messages", ctx -> {this.retrieveUserHandler(ctx);});
 
         //app.post("/register", this::registerHandler);
         // app.post("/register", ctx->{ if(this::registerHandler) {ctx.status(200);}else{ctx.status();}});
@@ -166,5 +167,26 @@ public class SocialMediaController {
         }else{
                 
         }
+    }
+
+    public void messagePatchHandler(Context context) throws SQLException{
+        MessageServiceClass MSC = new MessageServiceClass();
+        Message message1;
+        message1 = MSC.patchText(Integer.parseInt(context.pathParam("message_id")), context);
+        if(message1 != null){
+            context.status(200);
+           context.json(message1);
+        }else{
+                context.status(400);
+        }
+
+
+    }
+
+    public void retrieveUserHandler(Context context)throws SQLException{
+        MessageServiceClass MSC = new MessageServiceClass();
+        ArrayList<Message> list1 = new ArrayList<>();
+        list1 = MSC.getAllMessagesUser(context);
+        context.json(list1);
     }
 }
